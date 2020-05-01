@@ -7,7 +7,55 @@ class App extends React.Component {
     super(props)
   }
 
+  degToRad(deg) {
+    return deg*(Math.PI/180)
+  }
+
+  getCenter(obj) {
+    var centerX = obj.offsetLeft + obj.offsetWidth / 2
+    var centerY = obj.offsetTop + obj.offsetHeight / 2
+    return {'centerX': centerX, 'centerY': centerY}
+  }
+
+  translate (thisCenter, containerCenter, rad) {
+      
+      var diffX = thisCenter['centerX'] - containerCenter['centerX']
+      var diffY = thisCenter['centerY'] - containerCenter['centerY']
+      var newX = diffX*Math.cos(rad) - diffY*Math.sin(rad)
+      var newY = diffY*Math.cos(rad) + diffX*Math.sin(rad)
+      return {
+          'newX': newX - diffX,
+          'newY': newY - diffY
+        }
+  }
+
   rotateImage(n) {
+
+    var img_collection = document.getElementsByTagName('img')
+    var deg = document.getElementById('angle').value
+    if (img_collection.length%2 === 1) {
+        var centerImg = img_collection[Math.floor(img_collection.length/2)]
+        var containerCenter = this.getCenter(centerImg)
+        console.log(containerCenter)
+    }
+    else {
+        containerCenter = {
+            'centerX': img_collection[img_collection.length/2].offsetLeft + img_collection[img_collection.length/2].outerWidth,
+            'centerY': img_collection[img_collection.length/2].offsetTop + img_collection[img_collection.length/2].outerHeight
+        }
+    }
+
+    var rad = this.degToRad(deg)
+
+    for (var i=0; i<img_collection.length; i++) {
+
+        var thisCenter = this.getCenter(img_collection[i])
+        console.log(thisCenter, containerCenter)
+        var translatedCenter = this.translate(thisCenter, containerCenter, rad)
+        img_collection[i].style.transform = 'translate('+translatedCenter['newX']+'px, '+translatedCenter['newY']+'px) rotate('+deg+'deg)'
+    } 
+    
+    // (Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), -x*Math.cos(rad) + y*Math.sin(rad) + x, -x*Math.sin(rad) - y*Math.cos(rad) + y)
   }
 
   render() {
@@ -17,7 +65,7 @@ class App extends React.Component {
               Enter the angle: <input type="number" name="angle" id="angle"/>
               <button className="button" onClick={() => this.rotateImage(3)}>Rotate</button>
           </div>
-          <div className="container">
+          <div className="container" id="rotateThis">
               <div className="row">
                   <div className="column">
                       <img src="https://i.postimg.cc/crtmZTTr/image-part-001.jpg" alt="Part1" id="image1" />
