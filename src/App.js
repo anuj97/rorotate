@@ -3,10 +3,6 @@ import './App.css';
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   degToRad(deg) {
     return deg*(Math.PI/180)
   }
