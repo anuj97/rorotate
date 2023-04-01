@@ -32,7 +32,6 @@ class App extends React.Component {
     if (img_collection.length%2 === 1) {
         var centerImg = img_collection[Math.floor(img_collection.length/2)]
         var containerCenter = this.getCenter(centerImg)
-        console.log(containerCenter)
     }
     else {
         containerCenter = {
@@ -45,13 +44,10 @@ class App extends React.Component {
 
     for (var i=0; i<img_collection.length; i++) {
 
-        var thisCenter = this.getCenter(img_collection[i])
-        console.log(thisCenter, containerCenter)
+        var thisCenter = this.getCenter(img_collection[i])  
         var translatedCenter = this.translate(thisCenter, containerCenter, rad)
         img_collection[i].style.transform = 'translate('+translatedCenter['newX']+'px, '+translatedCenter['newY']+'px) rotate('+deg+'deg)'
-    } 
-    
-    // (Math.cos(rad), Math.sin(rad), -Math.sin(rad), Math.cos(rad), -x*Math.cos(rad) + y*Math.sin(rad) + x, -x*Math.sin(rad) - y*Math.cos(rad) + y)
+    }
   }
 
   render() {
